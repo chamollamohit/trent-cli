@@ -4,7 +4,8 @@ import chalk from 'chalk'
 import figlet from 'figlet'
 import { Command } from 'commander'
 import 'dotenv/config'
-import { login } from './commands/auth/login.js';
+import { login, logout } from './commands/auth/login.js';
+import { whoami } from './commands/who-am-i/who-am-i.js';
 
 
 async function main() {
@@ -25,6 +26,8 @@ async function main() {
     program.version('0.0.1')
         .description("Trent CLI - A Cli Based AI Tool")
         .addCommand(login)
+        .addCommand(logout)
+        .addCommand(whoami)
 
     // Default action shows help
     program.action(() => {
