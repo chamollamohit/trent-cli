@@ -6,6 +6,7 @@ import { Command } from 'commander'
 import 'dotenv/config'
 import { login, logout } from './commands/auth/login.js';
 import { whoami } from './commands/who-am-i/who-am-i.js';
+import { wakeUp } from './commands/ai/wakeUp.js';
 
 
 async function main() {
@@ -28,6 +29,7 @@ async function main() {
         .addCommand(login)
         .addCommand(logout)
         .addCommand(whoami)
+        .addCommand(wakeUp)
 
     // Default action shows help
     program.action(() => {
