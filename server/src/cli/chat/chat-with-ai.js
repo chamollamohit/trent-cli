@@ -78,9 +78,9 @@ export async function initConversation(userId, conversationId = null, mode = "ch
     console.log(coversationInfo);
 
     // Display previous message if any
-    if (conversation.message?.length > 0) {
+    if (conversation.messages?.length > 0) {
         console.log(chalk.yellow("📜 Previous messages: \n"));
-        displayMessages(conversation.message)
+        displayMessages(conversation.messages)
     }
     return conversation
 }
