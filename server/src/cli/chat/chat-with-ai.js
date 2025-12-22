@@ -12,7 +12,7 @@ import prisma from "../../lib/db.js"
 marked.use(
     markedTerminal({
         code: chalk.cyan,
-        blackquote: chalk.gray.italic,
+        blockquote: chalk.gray.italic,
         heading: chalk.green.bold,
         firstHeading: chalk.magenta.underline.bold,
         hr: chalk.reset,
