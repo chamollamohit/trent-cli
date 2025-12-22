@@ -29,7 +29,7 @@ export class ChatService {
 
     async getOrCreateConversation(userId, conversationId, mode = "chat") {
         if (conversationId) {
-            const conversation = await prisma.conversation.findUnique({
+            const conversation = await prisma.conversation.findFirst({
                 where: {
                     id: conversationId,
                     userId
