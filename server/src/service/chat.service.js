@@ -23,7 +23,7 @@ export class ChatService {
     /**
      * Get or Create a Conversation for user
      * @param {string} userId - User ID
-     * @param {string} conversationId - Optional COnversation ID
+     * @param {string} conversationId - Optional Conversation ID
      * @param {string} mode - Chat, tool or agent
      */
 
@@ -50,7 +50,7 @@ export class ChatService {
 
     /**
     * Add a message to conversation
-    * @param {string} conversationId - COnversation ID
+    * @param {string} conversationId - Conversation  ID
     * @param {string} role - user, assistant, tool, system
     * @param {string} content - Message content
     */
@@ -109,7 +109,7 @@ export class ChatService {
     }
 
     /**
-    * delete a conversation 
+    * Delete a conversation 
     * @param {string} conversationId - Conversation ID
     * @param {string} userId - User ID
     */
@@ -158,8 +158,8 @@ export class ChatService {
      * @param {Array} messages - Database messages
      */
 
-    formatMessageForAI(meessages) {
-        return meessages.map((msg) => ({
+    formatMessageForAI(messages) {
+        return messages.map((msg) => ({
             role: msg.role,
             content: typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content)
         }))
