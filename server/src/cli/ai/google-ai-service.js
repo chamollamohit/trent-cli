@@ -52,7 +52,7 @@ export class AIService {
             const toolCalls = []
             const toolResults = []
 
-            if (fullResult.steps && Array.isArray(fullResult.steps)) {
+            if (await fullResult.steps && Array.isArray(fullResult.steps)) {
                 for (const step of fullResult.steps) {
                     if (step.toolCalls && step.toolCalls.length > 0) {
                         for (const toolCall of step.toolCalls) {

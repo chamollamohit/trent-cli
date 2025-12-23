@@ -49,7 +49,7 @@ export function getEnabledTools() {
     }
 }
 
-export function toogleTool(toolId) {
+export function toggleTool(toolId) {
     const tool = availableTools.find(t => t.id === toolId)
 
     if (tool) {
@@ -58,7 +58,7 @@ export function toogleTool(toolId) {
 
         return tool.enabled
     }
-    console.log(chalk.yellow(`[DEBUG] Tool ${toolId}not found`));
+    console.log(chalk.yellow(`[DEBUG] Tool ${toolId} not found`));
     return false
 }
 

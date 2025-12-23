@@ -233,7 +233,7 @@ async function getAIRespone(conversationId) {
 async function chatLoop(conversation) {
     const enabledToolNames = getEnabledToolNames()
     const helpBox = boxen(
-        `${chalk.gray('. Type your message and press Enter')}\n${chalk.gray('• AI has access to:')} ${enabledToolNames.length > 0 ? enabledToolNames.join(", ") : "No tools"}\n${chalk.gray('• Type "exit" to end conversation')}n${chalk.gray('• Press Ctrl+C to quit anytime')}`, {
+        `${chalk.gray('• Type your message and press Enter')}\n${chalk.gray('• AI has access to:')} ${enabledToolNames.length > 0 ? enabledToolNames.join(", ") : "No tools"}\n${chalk.gray('• Type "exit" to end conversation')}n${chalk.gray('• Press Ctrl+C to quit anytime')}`, {
         padding: 1,
         margin: { bottom: 1 },
         borderStyle: "round",
