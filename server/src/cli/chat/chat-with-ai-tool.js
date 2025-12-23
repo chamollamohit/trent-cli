@@ -206,7 +206,7 @@ async function getAIRespone(conversationId) {
             console.log(toolCallBox);
         }
 
-        if (result.toolResult && result.toolResults.length > 0) {
+        if (result.toolResults && result.toolResults.length > 0) {
             const toolResultBox = boxen(result.toolResults.map(tr => `${chalk.green("✅ Tool:")} ${tr.toolName}\n${chalk.gray("Result:")} ${JSON.stringify(tr.result, null, 2).slice(0, 200)}...`).join('\n\n'), {
                 padding: 1,
                 margin: 1,
