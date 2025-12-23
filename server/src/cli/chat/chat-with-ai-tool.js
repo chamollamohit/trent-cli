@@ -1,13 +1,15 @@
-import boxen from "boxen"
-import chalk from "chalk"
 import { marked } from "marked"
 import { markedTerminal } from "marked-terminal"
 import { AIService } from "../ai/google-ai-service.js"
 import { ChatService } from "../../service/chat.service.js"
-import { intro, isCancel, outro, text } from "@clack/prompts"
+import { cancel, intro, isCancel, multiselect, outro, text } from "@clack/prompts"
+import { availableTools, enableTools, getEnabledToolNames, getEnabledTools, resetTools } from "../../config/tool.config.js"
+import boxen from "boxen"
+import chalk from 'chalk'
 import { getStoredToken } from "../../lib/token.js"
 import yoctoSpinner from "yocto-spinner"
 import prisma from "../../lib/db.js"
+
 
 marked.use(
     markedTerminal({
@@ -30,8 +32,7 @@ marked.use(
 const aiService = new AIService()
 const chatService = new ChatService()
 
-
-export async function getUserFromToken() {
+async function getUserFromToken() {
     const token = await getStoredToken()
 
     if (!token.access_token) {
@@ -58,31 +59,71 @@ export async function getUserFromToken() {
     return user
 }
 
-export async function initConversation(userId, conversationId = null, mode = "chat") {
+async function selectTools() {
+    const toolOptions = availableTools.map(tool => ({
+        value: tool.id,
+        label: tool.name,
+        hint: tool.description
+    }))
+
+    const selectTools = await multiselect({
+        message: chalk.cyan("Select tools tp enable (Space to select, Enter to confirm):"),
+        options: toolOptions,
+        required: false
+    })
+
+    if (isCancel(selectTools)) {
+        cancel(chalk.yellow("Tool selection canceled"))
+        process.exit(0)
+    }
+
+    enableTools(selectTools)
+
+    if (selectTools.length === 0) {
+        console.log(chalk.yellow("\n⚠️ No Tools selected. AI will work without tools. \n"));
+    } else {
+        const toolBox = boxen(chalk.green(`✅Enabled tools: \n${selectTools.map(id => {
+            const tool = availableTools.find(t => t.id === id)
+            return `• ${tool.name}`
+        }).join('\n')}`), {
+            padding: 1,
+            margin: { top: 1, bottom: 1 },
+            borderStyle: "round",
+            borderColor: "green",
+            title: "🔨 Active Tools",
+            titleAlignment: "center"
+        })
+        console.log(toolBox);
+    }
+
+    return selectTools.length > 0
+}
+
+async function initConversation(userId, conversationId = null, mode = "tool") {
     const spinner = yoctoSpinner({ text: "Loading conversation..." }).start()
     const conversation = await chatService.getOrCreateConversation(userId, conversationId, mode)
-
     spinner.success("Conversation Loaded")
 
-    // Display conversation info in box
+    const enabledToolNames = getEnabledToolNames()
+    const toolsDisplay = enabledToolNames.length > 0 ? `\n${chalk.gray("Active Tools:")} ${enabledToolNames.join(", ")}` : `\n${chalk.gray("No tools enabled")}`
 
-    const coversationInfo = boxen(`${chalk.bold("Conversation")}: ${conversation.title}\n${chalk.grey("ID: " + conversation.id)}\n${chalk.grey("Mode : " + conversation.mode)}`, {
+    const coversationInfo = boxen(`${chalk.bold("Conversation")}: ${conversation.title}\n${chalk.grey("ID: " + conversation.id)}\n${chalk.grey("Mode : " + conversation.mode)}${toolsDisplay}`, {
         padding: 1,
         margin: { top: 1, bottom: 1 },
         borderStyle: "round",
         borderColor: "cyan",
-        title: "💭 Chat Session",
+        title: "💭 Tool Calling Session",
         titleAlignment: "center"
     })
 
     console.log(coversationInfo);
-
     // Display previous message if any
     if (conversation.messages?.length > 0) {
         console.log(chalk.yellow("📜 Previous messages: \n"));
         displayMessages(conversation.messages)
     }
     return conversation
+
 }
 
 function displayMessages(messages) {
@@ -97,8 +138,7 @@ function displayMessages(messages) {
                 titleAlignment: "left"
             })
             console.log(userBox);
-        } else {
-            // Markdown for assistant messages
+        } else if (msg.role === "assistant") {
             const renderContent = marked.parse(msg.content)
             const assistantBox = boxen(renderContent.trim(), {
                 padding: 1,
@@ -117,6 +157,14 @@ async function saveMessage(conversationId, role, content) {
     return await chatService.addMessage(conversationId, role, content)
 }
 
+
+async function updateConversationTitle(conversationId, userInput, messageCount) {
+    if (messageCount === 1) {
+        const title = userInput.slice(0, 50) + (userInput.length > 50 ? "..." : "")
+        await chatService.updateTitle(conversationId, title)
+    }
+}
+
 async function getAIRespone(conversationId) {
     const spinner = yoctoSpinner({
         text: "AI is thinking...",
@@ -125,11 +173,12 @@ async function getAIRespone(conversationId) {
 
     const dbMessages = await chatService.getMessages(conversationId)
     const aiMessages = await chatService.formatMessageForAI(dbMessages)
+    const tools = getEnabledTools()
 
     let fullResponse = ""
 
     let isFirstChunk = true
-
+    const toolCallDetected = []
     try {
         const result = await aiService.sendMessage(aiMessages, (chunk) => {
             if (isFirstChunk) {
@@ -141,9 +190,32 @@ async function getAIRespone(conversationId) {
                 isFirstChunk = false
             }
             fullResponse += chunk
+        }, tools, (toolCall) => {
+            toolCallDetected.push(toolCall)
         })
+        if (toolCallDetected.length > 0) {
+            console.log('\n');
+            const toolCallBox = boxen(toolCallDetected.map(tc => `${chalk.cyan("🔨 Tool:")} ${tc.toolName}\n${chalk.gray("Args:")} ${JSON.stringify(tc.args, null, 2)}`).join('\n\n'), {
+                padding: 1,
+                margin: 1,
+                borderStyle: "round",
+                borderColor: "cyan",
+                title: "🔨 Tool Calls"
+            })
 
-        // render the complete markdown response
+            console.log(toolCallBox);
+        }
+
+        if (result.toolResult && result.toolResults.length > 0) {
+            const toolResultBox = boxen(result.toolResults.map(tr => `${chalk.green("✅ Tool:")} ${tr.toolName}\n${chalk.gray("Result:")} ${JSON.stringify(tr.result, null, 2).slice(0, 200)}...`).join('\n\n'), {
+                padding: 1,
+                margin: 1,
+                borderStyle: "round",
+                borderColor: "cyan",
+                title: "📊 Tool Results"
+            })
+            console.log(toolResultBox);
+        }
 
         console.log('\n');
         const renderMarkdown = marked.parse(fullResponse)
@@ -158,20 +230,15 @@ async function getAIRespone(conversationId) {
     }
 }
 
-async function updateConversationTitle(conversationId, userInput, messageCount) {
-    if (messageCount === 1) {
-        const title = userInput.slice(0, 50) + (userInput.length > 50 ? "..." : "")
-        await chatService.updateTitle(conversationId, title)
-    }
-}
-
-export async function chatLoop(conversation) {
-    const helpBox = boxen(`${chalk.gray('• Type your message and press Enter')}\n${chalk.gray('• Markdown formatting is supported in response')}\n${chalk.gray('• Type "exit" to end conversation')}\n${chalk.gray('• Press Ctrl+C to quit anytime')}`, {
+async function chatLoop(conversation) {
+    const enabledToolNames = getEnabledToolNames()
+    const helpBox = boxen(
+        `${chalk.gray('. Type your message and press Enter')}\n${chalk.gray('• AI has access to:')} ${enabledToolNames.length > 0 ? enabledToolNames.join(", ") : "No tools"}\n${chalk.gray('• Type "exit" to end conversation')}n${chalk.gray('• Press Ctrl+C to quit anytime')}`, {
         padding: 1,
         margin: { bottom: 1 },
-        borderStyle: 'round',
+        borderStyle: "round",
         borderColor: "gray",
-        dimBorder: true
+        dimBorder: true,
     })
     console.log(helpBox);
 
@@ -221,7 +288,6 @@ export async function chatLoop(conversation) {
 
         console.log(userBox);
 
-
         await saveMessage(conversation.id, "user", userInput)
 
         const messages = await chatService.getMessages(conversation.id)
@@ -234,7 +300,7 @@ export async function chatLoop(conversation) {
     }
 }
 
-export async function startChat(mode = 'chat', conversationId = null) {
+export async function startToolChat(conversationId = null) {
     try {
         intro(
             boxen(chalk.bold.cyan("Trent AI Chat"), {
@@ -245,20 +311,24 @@ export async function startChat(mode = 'chat', conversationId = null) {
         )
 
         const user = await getUserFromToken()
-        const conversation = await initConversation(user.id, conversationId, mode)
+
+        await selectTools()
+
+        const conversation = await initConversation(user.id, conversationId, "tool")
         await chatLoop(conversation)
 
-        outro(chalk.green('🌟 Thanks for Chatting'))
+        resetTools()
+
+        outro(chalk.green("🌟 Thanks for using tools"))
     } catch (error) {
-        console.log(error);
         const errorBox = boxen(chalk.red(`❌ Error: ${error.message}`), {
             padding: 1,
             margin: 1,
             borderStyle: "round",
             borderColor: "red"
         })
-
-        console.log(errorBox)
+        console.log(errorBox);
+        resetTools()
         process.exit(1)
     }
 }

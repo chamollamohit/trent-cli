@@ -21,7 +21,7 @@ async function main() {
         )
     );
 
-    console.log(chalk.red("A cli based AI Tool \n"));
+    console.log(chalk.red("A CLI based AI Tool \n"));
     const program = new Command("trent");
 
     program.version('0.0.1')

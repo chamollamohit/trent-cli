@@ -5,6 +5,7 @@ import prisma from "../../../lib/db.js";
 import { select } from "@clack/prompts";
 import { Command } from "commander";
 import { startChat } from "../../chat/chat-with-ai.js";
+import { startToolChat } from "../../chat/chat-with-ai-tool.js";
 
 
 
@@ -67,7 +68,8 @@ const wakeUpAction = async () => {
             startChat("chat")
             break;
         case "tool":
-            console.log(chalk.green("Tool calling is selected"));
+            startToolChat()
+            break;
         case "agent":
             console.log(chalk.yellow("Agentic mode coming soon"));
     }
@@ -75,5 +77,5 @@ const wakeUpAction = async () => {
 }
 
 export const wakeUp = new Command("wakeup")
-    .description("Wake the ai")
+    .description("Wakeup the ai")
     .action(wakeUpAction)
