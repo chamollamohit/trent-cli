@@ -34,8 +34,8 @@ export class AIService {
             }
 
             if (tools && Object.keys(tools).length > 0) {
-                streamConfig.tools = tools,
-                    streamConfig.maxSteps = 5
+                streamConfig.tools = tools;
+                streamConfig.maxSteps = 5;
             }
             const result = streamText(streamConfig)
             let fullResponse = ""
