@@ -84,7 +84,14 @@ To run Trent CLI locally, you need to set up both the server (CLI) and the clien
     npm install
     ```
 
-3.  Run the development server:
+3.  Set up environment variables (`.env`):
+
+    ```env
+    NEXT_PUBLIC_BETTER_AUTH_URL=
+    NEXT_PUBLIC_APP_URL=
+    ```
+
+4.  Run the development server:
     ```bash
     npm run dev
     ```
@@ -133,6 +140,7 @@ Upon running this command, you will be prompted to select a mode:
 
 ### 📂 Project Structure
 
+```
 trent-cli/
 ├── client/ # Next.js Frontend (Auth Provider)
 │ ├── app/ # App Router Pages
@@ -147,3 +155,4 @@ trent-cli/
 │ │ ├── lib/ # Shared utilities (DB, Auth, Token)
 │ │ └── service/ # Business logic services
 │ └── prisma/ # Database Schema & Migrations
+```
