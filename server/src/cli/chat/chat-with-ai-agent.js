@@ -114,8 +114,8 @@ async function agentLoop(conversation) {
     const helpBox = boxen(
         `${chalk.cyan.bold("What can the agent do?")}\n\n` +
         `${chalk.gray('•Generate complete applications from the description')}\n` +
-        `${chalk.gray('• Create all necessary filed and folders')}\n` +
-        `${chalk.gray('• Inclue setup instructions and commands')}\n` +
+        `${chalk.gray('• Create all necessary files and folders')}\n` +
+        `${chalk.gray('• Include setup instructions and commands')}\n` +
         `${chalk.gray('• Generate production-ready code')}\n\n` +
         `${chalk.yellow.bold("Example:")}\n` +
         `${chalk.white('• "Build a todo app with React and Tailwind"')}\n` +
