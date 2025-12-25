@@ -254,7 +254,7 @@ async function chatLoop(conversation) {
         })
 
         if (isCancel(userInput)) {
-            const exitBox = boxen(chalk.yellow("Chat session ended. Goodbye! 👋👋"), {
+            const exitBox = boxen(chalk.yellow("Chat session cancelled. Goodbye! 👋👋"), {
                 padding: 1,
                 margin: 1,
                 borderColor: "yellow",

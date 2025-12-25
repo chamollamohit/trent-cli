@@ -1,4 +1,4 @@
-import { convertToModelMessages, streamText } from 'ai';
+import { generateObject, streamText } from 'ai';
 import { google } from "@ai-sdk/google";
 import { config } from '../../config/google.config.js';
 import chalk from 'chalk';
@@ -96,5 +96,26 @@ export class AIService {
             fullResponse += chunk
         }, tools)
         return result.content
+    }
+    /**
+     * Generate structured output using a zod schema
+     * @param {object} schema - Zod Schema
+     * @param {String} prompt - Prompt for generating
+     * @returns {Promise<object>} - Parsed object matching the schema
+     */
+
+    async generateStructuredResponse(schema, prompt) {
+        try {
+            const result = await generateObject({
+                model: this.model,
+                schema: schema,
+                prompt: prompt
+            })
+
+            return result.object
+        } catch (error) {
+            console.error(chalk.red("AI Structured Response Generation Error:"), error.message)
+            throw error
+        }
     }
 }
