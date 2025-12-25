@@ -6,6 +6,7 @@ import { select } from "@clack/prompts";
 import { Command } from "commander";
 import { startChat } from "../../chat/chat-with-ai.js";
 import { startToolChat } from "../../chat/chat-with-ai-tool.js";
+import { startAgentChat } from "../../chat/chat-with-ai-agent.js";
 
 
 
@@ -53,25 +54,26 @@ const wakeUpAction = async () => {
         {
             value: "tool",
             label: "Tool Calling",
-            hint: "Chat with tools (Google Search, Code Execution"
+            hint: "Chat with tools (Google Search, Code Execution)"
         },
         {
             value: "agent",
             label: "Agentic Mode",
-            hint: "Advance AI agent (Coming soon)"
+            hint: "Advanced AI agent"
         }
         ]
     })
 
     switch (choice) {
         case "chat":
-            startChat("chat")
+            await startChat("chat")
             break;
         case "tool":
-            startToolChat()
+            await startToolChat()
             break;
         case "agent":
-            console.log(chalk.yellow("Agentic mode coming soon"));
+            await startAgentChat()
+            break
     }
 
 }
