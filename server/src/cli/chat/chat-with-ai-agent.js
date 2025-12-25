@@ -202,9 +202,10 @@ async function agentLoop(conversation) {
                 if (isCancel(continuePrompt) || !continuePrompt) {
                     console.log(chalk.yellow("\n👋 Great! Check your new application \n"));
                     break
-                } else {
-                    throw new Error("Generation return no result")
                 }
+                // User wants to continue - loop will iterate again
+            } else {
+                throw new Error("Generation returned no result")
             }
         } catch (error) {
             console.log(chalk.red(`\n ❌ Error: ${error.message}\n`));
