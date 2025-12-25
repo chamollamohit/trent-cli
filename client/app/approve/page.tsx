@@ -5,10 +5,10 @@ import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
 import { CheckCircle, Smartphone } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { toast } from "sonner";
 
-const DeviceApprovalPage = () => {
+const DeviceApprovalContent = () => {
     const { data, isPending } = authClient.useSession();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -192,6 +192,20 @@ const DeviceApprovalPage = () => {
                 </div>
             </div>
         </div>
+    );
+};
+
+const DeviceApprovalPage = () => {
+    return (
+        <Suspense
+            fallback={
+                <div className="flex flex-col justify-center items-center h-screen bg-background">
+                    <Spinner />
+                </div>
+            }
+        >
+            <DeviceApprovalContent />
+        </Suspense>
     );
 };
 
