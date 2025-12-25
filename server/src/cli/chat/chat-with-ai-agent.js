@@ -6,6 +6,7 @@ import { cancel, confirm, intro, isCancel, outro, text } from "@clack/prompts"
 import { generateApplication } from "../../config/agent.config.js"
 import { getStoredToken } from "../../lib/token.js"
 import yoctoSpinner from "yocto-spinner"
+import prisma from "../../lib/db.js"
 
 
 const aiService = new AIService()
