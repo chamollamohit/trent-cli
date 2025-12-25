@@ -58,7 +58,7 @@ function displayFileTree(files, folderName) {
     })
 }
 
-async function creatApplicationFiles(baseDir, folderName, files) {
+async function createApplicationFiles(baseDir, folderName, files) {
     const appDir = path.join(baseDir, folderName)
 
     await fs.mkdir(appDir, { recursive: true })
@@ -85,7 +85,7 @@ export async function generateApplication(description, aiService, cwd = process.
         const result = await generateObject({
             model: aiService.model,
             schema: ApplicationSchema,
-            prompt: `Create a complete, prodution-ready application for: ${description}
+            prompt: `Create a complete, production-ready application for: ${description}
             CRITICAL REQUIREMENTS:
             1. Generate all files needed for the application to run
             2. Include package.json with all the dependencies and correct version
@@ -117,7 +117,7 @@ export async function generateApplication(description, aiService, cwd = process.
 
         printSystem(chalk.cyan('\n🗃️ Creating files...\n'))
 
-        const appDir = await creatApplicationFiles(cwd, application.folderName, application.files)
+        const appDir = await createApplicationFiles(cwd, application.folderName, application.files)
 
         // Display Result
         printSystem(chalk.green.bold(`\n 🌟 Application created successfully!\n`))
