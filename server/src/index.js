@@ -6,6 +6,8 @@ import { auth } from "./lib/auth.js"
 
 const app = express()
 
+app.set('trust proxy', true);
+
 app.use(
     cors({
         origin: process.env.CORS_URL,
