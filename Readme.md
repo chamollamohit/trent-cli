@@ -13,9 +13,9 @@
 
 ## 🎥 Demos
 
-|                                       **Core Features** (Login, Chat, Tools)                                        |                                            **Advanced Mode** (Agentic AI)                                            |
-| :-----------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------: |
-| [![Watch Core Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID_1/0.jpg)](https://www.youtube.com/watch?v=UT4gtHAhtXs) | [![Watch Agent Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID_2/0.jpg)](https://www.youtube.com/watch?v=mwWo0KziimA) |
+|                                     **Core Features** (Login, Chat, Tools)                                      |                                          **Advanced Mode** (Agentic AI)                                          |
+| :-------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------: |
+| [![Watch Core Demo](https://img.youtube.com/vi/UT4gtHAhtXs/0.jpg)](https://www.youtube.com/watch?v=UT4gtHAhtXs) | [![Watch Agent Demo](https://img.youtube.com/vi/mwWo0KziimA/0.jpg)](https://www.youtube.com/watch?v=mwWo0KziimA) |
 
 ## 🛠️ Tech Stack
 
