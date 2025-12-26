@@ -11,6 +11,12 @@
 -   **User Management**: distinct `whoami` command to view authenticated user details.
 -   **Modern Stack**: Built with TypeScript, Prisma, Google AI SDK, and Next.js.
 
+## 🎥 Demos
+
+|                                       **Core Features** (Login, Chat, Tools)                                        |                                            **Advanced Mode** (Agentic AI)                                            |
+| :-----------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------: |
+| [![Watch Core Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID_1/0.jpg)](https://www.youtube.com/watch?v=UT4gtHAhtXs) | [![Watch Agent Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID_2/0.jpg)](https://www.youtube.com/watch?v=mwWo0KziimA) |
+
 ## 🛠️ Tech Stack
 
 -   **Runtime**: Node.js
