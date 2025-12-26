@@ -50,7 +50,12 @@ export default function Home() {
                             </div>
                         ) : (
                             <Link href="/sign-in">
-                                <Button>Login to CLI</Button>
+                                <Button
+                                    variant="outline"
+                                    className="hover:bg-gray-700 text-white-500"
+                                >
+                                    Login to CLI
+                                </Button>
                             </Link>
                         )}
                     </div>
@@ -78,7 +83,7 @@ export default function Home() {
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 items-center">
                         {/* Coming Soon Badge */}
-                        <div className="px-6 py-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20 font-mono text-sm text-yellow-500 flex items-center gap-2 cursor-not-allowed">
+                        <div className="px-6 py-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20 font-mono text-sm text-yellow-500 flex items-center gap-2 cursor-default">
                             <span>🚧 NPM Package Coming Soon</span>
                         </div>
 
@@ -86,7 +91,10 @@ export default function Home() {
                             href="https://github.com/chamollamohit/trent-cli"
                             target="_blank"
                         >
-                            <Button size="lg" className="w-full sm:w-auto">
+                            <Button
+                                size="lg"
+                                className="w-full cursor-pointer hover:bg-gray-400 sm:w-auto"
+                            >
                                 View on GitHub
                             </Button>
                         </Link>
